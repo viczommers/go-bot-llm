@@ -2,6 +2,7 @@
 [GTP (Go Text Protocol)](https://senseis.xmp.net/?GoTextProtocol) engine implementation to connect LLMs to [Sabaki GUI](https://github.com/SabakiHQ/Sabaki)
 ## Supports
 - Azure OpenAI GPT-4o (2024-12-01-preview)
+- Azure grok-4-fast-reasoning (2025-01-01-preview)
 
 ##  HOWTO
 - `MAX_RETRIES_PER_GAME` var controls total number of illegal moves allowed (up to 3 attempts per game, then automatic resignation)

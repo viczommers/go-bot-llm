@@ -1,10 +1,7 @@
 from models import GoMoveResponse
-from config import API_KEY, AZURE_API_VERSION, AZURE_ENDPOINT, AZURE_DEPLOYMENT
+from config import API_KEY, GROK_API_VERSION, AZURE_ENDPOINT, GROK_DEPLOYMENT
 from openai import AzureOpenAI
-import json
 import sys
-import traceback
-import re
 
 def eprint(*args, **kwargs):
     """Print to stderr for logging"""
@@ -12,7 +9,7 @@ def eprint(*args, **kwargs):
 
 client = AzureOpenAI(
     api_key=API_KEY,
-    api_version=AZURE_API_VERSION,
+    api_version=GROK_API_VERSION,  # Use Grok-specific API version
     azure_endpoint=AZURE_ENDPOINT
 )
 
@@ -58,9 +55,9 @@ def format_board_as_text(board, board_width, board_range):
 
     return "\n".join(lines)
 
-def get_go_move(board, board_width, board_range, move_history, color):
+def get_grok_move(board, board_width, board_range, move_history, color):
     """
-    Query Azure OpenAI for Go move suggestion using structured output
+    Query Grok-4 for Go move suggestion using structured output
 
     Args:
         board: List representing the board state
@@ -70,7 +67,7 @@ def get_go_move(board, board_width, board_range, move_history, color):
         color: 1 for Black, 2 for White
 
     Returns:
-        dict with keys: move, reasoning, thinking, tokens
+        dict with keys: move_type, move, reasoning, thinking, confidence, tokens
         or None if request fails
     """
     try:
@@ -118,77 +115,36 @@ Provide your response with:
 - move_type: 'coordinate' for normal moves, 'pass' for passing, 'resign' if position is hopeless
 - move: The actual coordinate (e.g., 'D4', 'K10') or 'PASS' or 'RESIGN'
 - reasoning: Brief explanation of your choice
-- thinking: Your detailed thought process"""
+- thinking: Your detailed thought process
+- confidence: Rate your confidence in this move from 1-10"""
 
-        # Check if this is a reasoning model (o1, o1-preview, o1-mini)
-        is_reasoning_model = any(x in AZURE_DEPLOYMENT.lower() for x in ['o1', 'reasoning'])
+        eprint(f"Querying Grok-4 ({GROK_DEPLOYMENT}) for move suggestion...")
 
-        eprint("Querying Azure OpenAI for move suggestion...")
+        # Grok-4 supports structured output with JSON schema
+        response = client.beta.chat.completions.parse(
+            model=GROK_DEPLOYMENT,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}
+            ],
+            response_format=GoMoveResponse,
+            # temperature=0.7,
+            # max_tokens=4096
+        )
 
-        if is_reasoning_model:
-            # For reasoning models, use standard completion (they don't support structured output yet)
-            eprint("Using reasoning model - accessing internal thoughts...")
-            response = client.chat.completions.create(
-                model=AZURE_DEPLOYMENT,
-                messages=[
-                    {"role": "user", "content": user_prompt + "\n\nProvide your response in JSON format with fields: move, reasoning, thinking"}
-                ],
-                temperature=1.0,  # Reasoning models use fixed temperature
-                max_completion_tokens=5000
-            )
-
-            # Try to parse JSON response
-            content = response.choices[0].message.content
-
-            # Print reasoning tokens if available (for o1 models)
-            if hasattr(response.choices[0].message, 'reasoning_content') and response.choices[0].message.reasoning_content:
-                eprint("\n=== MODEL THINKING PROCESS ===")
-                eprint(response.choices[0].message.reasoning_content)
-                eprint("==============================\n")
-
-            try:
-                move_data = json.loads(content)
-                move_type = move_data.get('move_type', 'coordinate')
-                move = move_data.get('move', '').strip().upper()
-                reasoning = move_data.get('reasoning', '')
-                thinking = move_data.get('thinking', '')
-            except:
-                # Fallback: try to extract move from text
-                eprint(f"Could not parse JSON, raw response: {content}")
-                match = re.search(r'[A-T]\d{1,2}|PASS', content, re.IGNORECASE)
-                if match:
-                    move = match.group(0).upper()
-                    reasoning = content
-                    thinking = ""
-                else:
-                    eprint("ERROR: Could not extract move from response")
-                    return None
-
-            tokens = vars(response.usage) if hasattr(response, 'usage') else {}
-
-        else:
-            # For standard models, use structured output
-            response = client.beta.chat.completions.parse(
-                model=AZURE_DEPLOYMENT,
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt}
-                ],
-                response_format=GoMoveResponse,
-                # temperature=0.7,
-                # max_tokens=1000
-            )
-
-            # Extract structured response
-            move_response = response.choices[0].message.parsed
-            move_type = move_response.move_type
-            move = move_response.move.strip().upper()
-            reasoning = move_response.reasoning
-            thinking = move_response.thinking if move_response.thinking else ""
-            tokens = vars(response.usage) if hasattr(response, 'usage') else {}
+        # Extract structured response
+        move_response = response.choices[0].message.parsed
+        move_type = move_response.move_type
+        move = move_response.move.strip().upper()
+        reasoning = move_response.reasoning
+        thinking = move_response.thinking if move_response.thinking else ""
+        confidence = move_response.confidence if move_response.confidence else None
+        tokens = vars(response.usage) if hasattr(response, 'usage') else {}
 
         # Log the response
-        eprint(f"\nLLM suggested move: {move} (type: {move_type})")
+        eprint(f"\nGrok-4 suggested move: {move} (type: {move_type})")
+        if confidence:
+            eprint(f"Confidence: {confidence}/10")
         if thinking:
             eprint(f"\n=== THINKING PROCESS ===")
             eprint(thinking)
@@ -200,6 +156,7 @@ Provide your response with:
             'move': move,
             'reasoning': reasoning,
             'thinking': thinking,
+            'confidence': confidence,
             'tokens': tokens
         }
 
@@ -208,6 +165,5 @@ Provide your response with:
         if "ContentFilterFinishReasonError" in str(type(e).__name__):
             eprint(f"Content filter triggered (common with Go terms) - will retry")
         else:
-            eprint(f"ERROR: Failed to call Azure OpenAI: {e}")
-            # eprint(traceback.format_exc())
+            eprint(f"ERROR: Failed to call Grok-4: {e}")
         return None
