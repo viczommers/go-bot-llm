@@ -6,6 +6,11 @@
 ##  HOWTO
 - `MAX_RETRIES_PER_GAME` var controls total number of illegal moves allowed (up to 3 attempts per game, then automatic resignation)
 
+## Setup for Sabaki GUI (Mac)
+1. Go Sabaki > Settings.. > Engines Tab > Add
+2. In `Path` field, specify path to your Python env (e.g. `/Users/victor/Desktop/Git-Repos/wally/.venv/bin/python`)
+3. In `Arguments` field, specify path to your .py file (e.g. `/Users/victor/Desktop/Git-Repos/wally/wally_llm.py`)
+
 ## Wally (Mechanical AI)
 Reconstruction of the Wally - simple GO program written by Jonathan K. Millen for KIM-1<br>
 Wally is a GTP engine that needs GUI to tun under,<br>
