@@ -12,6 +12,20 @@
 2. In `Path` field, specify path to your Python env (e.g. `/Users/victor/Desktop/Git-Repos/wally/.venv/bin/python`)
 3. In `Arguments` field, specify path to your .py file (e.g. `/Users/victor/Desktop/Git-Repos/wally/wally_llm.py`)
 
+## Config Setup
+create `config.py`, it should contain:
+### Azure
+- `API_KEY` = "xyz"
+- `AZURE_ENDPOINT` = "xyz.openai.azure.com/"
+
+### API versions for different models
+- `AZURE_API_VERSION` = "2024-12-01-preview"
+- `GROK_API_VERSION` = "2025-01-01-preview" 
+
+### Model deployments
+- `AZURE_DEPLOYMENT` = "gpt-4o"
+- `GROK_DEPLOYMENT` = "grok-4-fast-reasoning"
+
 ## Wally (Mechanical AI)
 Reconstruction of the Wally - simple GO program written by Jonathan K. Millen for KIM-1<br>
 Wally is a GTP engine that needs GUI to tun under,<br>
