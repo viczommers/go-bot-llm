@@ -25,6 +25,7 @@ create `config.py`, it should contain:
 ### Model deployments
 - `AZURE_DEPLOYMENT` = "gpt-4o"
 - `GROK_DEPLOYMENT` = "grok-4-fast-reasoning"
+- `DEEPSEEK_DEPLOYMENT` = "DeepSeek-R1-0528"
 
 ## Wally (Mechanical AI)
 Reconstruction of the Wally - simple GO program written by Jonathan K. Millen for KIM-1<br>

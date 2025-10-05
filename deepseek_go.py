@@ -127,7 +127,7 @@ IMPORTANT: Respond with valid JSON in this exact format:
 move_type must be: 'coordinate', 'pass', or 'resign'
 move must be: valid coordinate like 'D4', or 'PASS', or 'RESIGN'"""
 
-        eprint(f"Querying DeepSeek r1 ({DEEPSEEK_DEPLOYMENT}) for move suggestion...")
+        eprint(f"Querying DeepSeek R1 ({DEEPSEEK_DEPLOYMENT}) for move suggestion...")
 
         # DeepSeek R1 on Azure only supports basic JSON mode
         response = client.chat.completions.create(
@@ -141,11 +141,21 @@ move must be: valid coordinate like 'D4', or 'PASS', or 'RESIGN'"""
 
         content = response.choices[0].message.content.strip()
 
-        # Remove markdown code blocks if present
-        if content.startswith("```"):
+        # Remove markdown code blocks and preamble text if present
+        if "```json" in content:
             content = content.split("```json")[-1].split("```")[0].strip()
+        elif "```" in content:
+            content = content.split("```")[-2].strip()
 
-        eprint(f"Raw JSON response: {content}")
+        # Extract JSON object if there's preamble text
+        if content.startswith("{"):
+            # Already clean JSON
+            pass
+        else:
+            # Find the first { and extract from there
+            json_start = content.find("{")
+            if json_start != -1:
+                content = content[json_start:]
 
         # Parse JSON manually
         move_data = json.loads(content)
@@ -155,10 +165,10 @@ move must be: valid coordinate like 'D4', or 'PASS', or 'RESIGN'"""
         thinking = move_data.get('thinking', '')
         tokens = vars(response.usage) if hasattr(response, 'usage') else {}
 
-        eprint("DeepSeek r1 using JSON mode")
+        eprint("DeepSeek R1 using JSON mode")
 
         # Log the response
-        eprint(f"\nDeepSeek r1 suggested move: {move} (type: {move_type})")
+        eprint(f"\nDeepSeek R1 suggested move: {move} (type: {move_type})")
         if thinking:
             eprint(f"\n=== THINKING PROCESS ===")
             eprint(thinking)
@@ -178,5 +188,5 @@ move must be: valid coordinate like 'D4', or 'PASS', or 'RESIGN'"""
         if "ContentFilterFinishReasonError" in str(type(e).__name__):
             eprint(f"Content filter triggered (common with Go terms) - will retry")
         else:
-            eprint(f"ERROR: Failed to call DeepSeek r1: {e}")
+            eprint(f"ERROR: Failed to call DeepSeek R1: {e}")
         return None
