@@ -165,8 +165,6 @@ move must be: valid coordinate like 'D4', or 'PASS', or 'RESIGN'"""
         thinking = move_data.get('thinking', '')
         tokens = vars(response.usage) if hasattr(response, 'usage') else {}
 
-        eprint("DeepSeek R1 using JSON mode")
-
         # Log the response
         eprint(f"\nDeepSeek R1 suggested move: {move} (type: {move_type})")
         if thinking:

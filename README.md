@@ -1,8 +1,10 @@
 # Protocol Wrapper for LLMs to play Go (Weiqi/Baduk) ○●  
-[GTP (Go Text Protocol)](https://senseis.xmp.net/?GoTextProtocol) engine implementation to connect LLMs to [Sabaki GUI](https://github.com/SabakiHQ/Sabaki)
+[GTP (Go Text Protocol)](https://senseis.xmp.net/?GoTextProtocol) engine implementation to connect LLMs to [Sabaki GUI](https://github.com/SabakiHQ/Sabaki).
 ## Supports
 - Azure OpenAI GPT-4o (2024-12-01-preview)
+- Azure OpenAI o4-mini (2025-04-01-preview)
 - Azure grok-4-fast-reasoning (2025-01-01-preview)
+- Azure DeepSeek-R1-0528 (2024-12-01-preview)
 
 ##  HOWTO
 - `MAX_RETRIES_PER_GAME` var controls total number of illegal moves allowed (up to 3 attempts per game, then automatic resignation)
@@ -23,15 +25,15 @@ create `config.py`, it should contain:
 - `GROK_API_VERSION` = "2025-01-01-preview" 
 
 ### Model deployments
-- `AZURE_DEPLOYMENT` = "gpt-4o"
+- `AZURE_DEPLOYMENT` = "gpt-4o" or "o4-mini"
 - `GROK_DEPLOYMENT` = "grok-4-fast-reasoning"
 - `DEEPSEEK_DEPLOYMENT` = "DeepSeek-R1-0528"
 
+## Katago:
+- Origina Repo https://github.com/lightvector/KataGo/
+
 ## Wally (Mechanical AI)
 Reconstruction of the Wally - simple GO program written by Jonathan K. Millen for KIM-1<br>
-Wally is a GTP engine that needs GUI to tun under,<br>
-tested with fantastic cross-platform Sabaki GUI:<br>
-https://github.com/SabakiHQ/Sabaki
-
+Wally is a GTP engine that needs GUI to turn under
 - Original article https://archive.org/details/byte-magazine-1981-04/page/n101/mode/2up
 - Original Repo https://github.com/maksimKorzh/wally
