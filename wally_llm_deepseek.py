@@ -3,9 +3,9 @@ def eprint(*args, **kwargs): print(*args, file=sys.stderr, **kwargs)
 
 import sys
 import random
-from openai_go import get_go_move
+from deepseek_go import get_deepseek_move as get_go_move
 
-VERSION = '1.0-LLM-OpenAI'
+VERSION = '1.0-LLM-DeepSeek'
 # Retry tracking for invalid moves
 MAX_RETRIES_PER_GAME = 3
 retry_count = 0
@@ -32,11 +32,11 @@ move_history = []
 
 # Check if LLM is configured
 try:
-    from config import API_KEY, AZURE_ENDPOINT, AZURE_DEPLOYMENT
+    from config import API_KEY, AZURE_ENDPOINT, DEEPSEEK_DEPLOYMENT
     USE_LLM = True
-    eprint(f"Azure OpenAI configured: {AZURE_DEPLOYMENT}")
+    eprint(f"Azure DeepSeek configured: {DEEPSEEK_DEPLOYMENT}")
 except Exception as e:
-    eprint(f"Warning: Could not load Azure OpenAI config: {e}")
+    eprint(f"Warning: Could not load Azure DeepSeek config: {e}")
     eprint("LLM mode disabled - check config.py")
     USE_LLM = False
 
@@ -204,7 +204,7 @@ pieces = '.#o  bw +'
 #   LLM Integration Functions
 #
 ###################################
-# Note: LLM API calls are handled by openai_go.py module
+# Note: LLM API calls are handled by deepseek_go.py module
 
 def validate_llm_move(move_str, color):
     """Validate and convert LLM move to board square
@@ -514,7 +514,7 @@ def gtp():
         command = input()
 
         # handle commands
-        if 'name' in command: print('= Wally-LLM\n')
+        if 'name' in command: print('= Wally-LLM-DeepSeek\n')
         elif 'protocol_version' in command: print('= 1\n');
         elif 'version' in command: print('=', VERSION, '\n')
         elif 'list_commands' in command: print('= protocol_version\n')

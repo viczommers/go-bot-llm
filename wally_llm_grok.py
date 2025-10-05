@@ -5,7 +5,7 @@ import sys
 import random
 from grok_go import get_grok_move as get_go_move
 
-VERSION = '1.0-LLM'
+VERSION = '1.0-LLM-Grok'
 # Retry tracking for invalid moves
 MAX_RETRIES_PER_GAME = 3
 retry_count = 0
