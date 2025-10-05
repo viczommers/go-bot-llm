@@ -67,7 +67,7 @@ def get_grok_move(board, board_width, board_range, move_history, color):
         color: 1 for Black, 2 for White
 
     Returns:
-        dict with keys: move_type, move, reasoning, thinking, confidence, tokens
+        dict with keys: move_type, move, reasoning, thinking, tokens
         or None if request fails
     """
     try:
@@ -115,8 +115,7 @@ Provide your response with:
 - move_type: 'coordinate' for normal moves, 'pass' for passing, 'resign' if position is hopeless
 - move: The actual coordinate (e.g., 'D4', 'K10') or 'PASS' or 'RESIGN'
 - reasoning: Brief explanation of your choice
-- thinking: Your detailed thought process
-- confidence: Rate your confidence in this move from 1-10"""
+- thinking: Your detailed thought process"""
 
         eprint(f"Querying Grok-4 ({GROK_DEPLOYMENT}) for move suggestion...")
 
@@ -138,13 +137,10 @@ Provide your response with:
         move = move_response.move.strip().upper()
         reasoning = move_response.reasoning
         thinking = move_response.thinking if move_response.thinking else ""
-        confidence = move_response.confidence if move_response.confidence else None
         tokens = vars(response.usage) if hasattr(response, 'usage') else {}
 
         # Log the response
         eprint(f"\nGrok-4 suggested move: {move} (type: {move_type})")
-        if confidence:
-            eprint(f"Confidence: {confidence}/10")
         if thinking:
             eprint(f"\n=== THINKING PROCESS ===")
             eprint(thinking)
@@ -156,7 +152,6 @@ Provide your response with:
             'move': move,
             'reasoning': reasoning,
             'thinking': thinking,
-            'confidence': confidence,
             'tokens': tokens
         }
 
