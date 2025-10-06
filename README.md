@@ -6,6 +6,10 @@
 - Azure grok-4-fast-reasoning (2025-01-01-preview)
 - Azure DeepSeek-R1-0528 (2024-12-01-preview)
 
+## Tournament Logs
+- Contains Logs with LLM reasoning and moves
+- Contains .SGF files (moves/board positions)
+
 ##  HOWTO
 - `MAX_RETRIES_PER_GAME` var controls total number of illegal moves allowed (up to 3 attempts per game, then automatic resignation)
 
