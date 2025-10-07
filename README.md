@@ -1,5 +1,7 @@
 # Protocol Wrapper for LLMs to play Go (Weiqi/Baduk) ○●  
 [GTP (Go Text Protocol)](https://senseis.xmp.net/?GoTextProtocol) engine implementation to connect LLMs to [Sabaki GUI](https://github.com/SabakiHQ/Sabaki).
+## Download Slides [HERE (reveal.js html)](https://github.com/viczommers/go-bot-llm/blob/main/slides/slides.html)
+
 ## Supports
 - Azure OpenAI GPT-4o (2024-12-01-preview)
 - Azure OpenAI o4-mini (2025-04-01-preview)
