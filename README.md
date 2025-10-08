@@ -12,6 +12,14 @@
 - Contains Logs with LLM reasoning and moves
 - Contains .SGF files (moves/board positions)
 
+## Usage Metrics
+| Model | Total Tokens | Cost per 1M Tokens |
+|-------|--------------|-------------------|
+| O4-mini | 3.59M | $4.40/M |
+| DeepSeek-R1 | 3.37M | $5.40/M |
+| Grok-4-fast | 944.95K | $1.73/M |
+| GPT-4o | 1.91M | $10.00/M |
+
 ##  HOWTO
 - `MAX_RETRIES_PER_GAME` var controls total number of illegal moves allowed (up to 3 attempts per game, then automatic resignation)
 
@@ -24,7 +32,7 @@
 create `config.py`, it should contain:
 ### Azure
 - `API_KEY` = "xyz"
-- `AZURE_ENDPOINT` = "xyz.openai.azure.com/"
+- `AZURE_ENDPOINT` = "https://xyz.openai.azure.com/"
 
 ### API versions for different models
 - `AZURE_API_VERSION` = "2024-12-01-preview"
