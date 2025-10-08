@@ -13,12 +13,14 @@
 - Contains .SGF files (moves/board positions)
 
 ## Usage Metrics
-| Model | Total Tokens | Cost per 1M Tokens |
-|-------|--------------|-------------------|
-| O4-mini | 3.59M | $4.40/M |
-| DeepSeek-R1 | 3.37M | $5.40/M |
-| Grok-4-fast | 944.95K | $1.73/M |
-| GPT-4o | 1.91M | $10.00/M |
+| Model | Total Tokens | Cost per 1M Tokens | Total Moves | Cost per Move |
+|-------|--------------|--------------------|-------------|---------------|
+| O4-mini | 3.59M | $4.40/M | ~305 | ~5.1¢/Move |
+| DeepSeek-R1 | 3.37M | $5.40/M | ~365 | ~4.9¢/Move |
+| Grok-4-fast | 944.95K | $1.73/M | ~388 | ~0.4¢/Move |
+| GPT-4o | 1.91M | $10.00/M | ~924 | ~2.0¢/Move |
+
+*Total moves are approx (+/- 10%); Token costs per Azure AI Foundry;
 
 ##  HOWTO
 - `MAX_RETRIES_PER_GAME` var controls total number of illegal moves allowed (up to 3 attempts per game, then automatic resignation)
