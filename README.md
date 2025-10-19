@@ -12,6 +12,19 @@
 - Contains Logs with LLM reasoning and moves
 - Contains .SGF files (moves/board positions)
 
+## Tournament Results
+
+| Win / Loss     | GPT-4o           | o4-mini           | grok-4           | DeepSeek-R1      | Wally            | KataGo           |
+|:--------------:|:----------------:|:----------------:|:----------------:|:----------------:|:----------------:|:----------------:|
+| **GPT-4o**     | X                | 0/4 (M: -19)     |                  | 3/2 (M: -32.6)   | 0/10 (M: -61)    | 0/10 (M: -178)   |
+| **o4-mini**    | 4/0 (M: +19)     | X                | 3/2 (M: -61.1)   | 2/3 (M: -39.5)   |                  |                  |
+| **grok-4**     |                  | 2/3 (M: +61.1)   | X                | 4/1 (M: -46.3)   |                  |                  |
+| **DeepSeek-R1**| 2/3 (M: +32.6)   | 3/2 (M: +39.5)   | 1/4 (M: +46.3)   | X                |                  |                  |
+| **Wally**      | 10/0 (M: +61)    |                  |                  |                  | X                | 0/5 (M: +234)    |
+| **KataGo**     | 10/0 (M: +178)   |                  |                  |                  | 5/0 (M: -234)    | X                |
+
+**M:** Estimated margin of win (conservative), based on the last board position. “+” = Estimated win; “−” = Estimated loss; May differ from final score outcome!
+
 ## Usage Metrics
 | Model | Total Tokens | Cost per 1M Tokens | Total Moves | Cost per Move |
 |-------|--------------|--------------------|-------------|---------------|
